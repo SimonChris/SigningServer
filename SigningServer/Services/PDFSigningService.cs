@@ -286,12 +286,8 @@ namespace JuraDemo.Services
                 PdfSigner stamper = new PdfSigner(reader, os, new StampingProperties());
 
                 PdfSignatureAppearance appearance = stamper.GetSignatureAppearance();
-                //appearance.SetRenderingMode(PdfSignatureAppearance.RenderingMode.GRAPHIC);
                 appearance.SetPageRect(new Rectangle(0, 0, 0, 0));
-                //appearance.SetPageNumber(1);
-                //appearance.SetLayer2FontSize(14f);
                 stamper.SetFieldName(fieldName);
-                //appearance.SetReason("Axolex signature");
 
                 IExternalSignatureContainer external = new ExternalBlankSignatureContainer(PdfName.Adobe_PPKLite,
                     PdfName.Adbe_pkcs7_detached);
