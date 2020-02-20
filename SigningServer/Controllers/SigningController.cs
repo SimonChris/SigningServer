@@ -32,7 +32,7 @@ namespace SigningServer.Controllers
         [HttpPost]
         public IActionResult SignPDF([FromBody] byte[] pdf)
         {
-            using(var stream = new MemoryStream(pdf)) {
+            using (var stream = new MemoryStream(pdf)) {
                 var signedPDF = PDFSigningService.SignPDFStream(stream, _rootPath);
                 return Ok(signedPDF);
             }

@@ -404,7 +404,7 @@ namespace JuraDemo.Services
 
             public static String SslCertificatePath(string rootPath)
             {
-                return rootPath + "/axolex.pfx";
+                return rootPath + "/certificate.pfx";
             }
         }
     }
