@@ -258,13 +258,13 @@ namespace JuraDemo.Services
         public static byte[] SignPDFStream(MemoryStream source, string rootPath)
         {
             collection = new X509Certificate2Collection();
-            collection.Import(GsConfig.SslCertificatePath(rootPath), GsConfig.GetKeyPassword(),
+            collection.Import(GsConfig.GetSslCertificatePath(rootPath), GsConfig.KeyPassword,
                 X509KeyStorageFlags.DefaultKeySet);
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             //get JSON access token
-            JObject access = Login(baseURL, GsConfig.GetApiKey(), GsConfig.GetApiSecret());
+            JObject access = Login(baseURL, GsConfig.ApiKey, GsConfig.ApiSecret);
 
             //get JSON with id/certificate/ocsp response
             JObject identity = Identity(baseURL, access);
@@ -381,24 +381,11 @@ namespace JuraDemo.Services
 
         public static class GsConfig
         {
-            public static String GetApiSecret()
-            {
-                //return "ab7992b78a1f5b83ce492833a9b7d617837d98be";
-                return "948dc3a6346a54289d69b18c03ae7424116664c1";
-            }
+            public static string ApiSecret { get; set; }
+            public static string ApiKey { get; set; }
+            public static string KeyPassword { get; set; }
 
-            public static String GetApiKey()
-            {
-                //return "2db2f48a52fe3db1";
-                return "451905b2f93d025d";
-            }
-
-            public static String GetKeyPassword()
-            {
-                return "AxolexMS29";
-            }
-
-            public static String SslCertificatePath(string rootPath)
+            public static string GetSslCertificatePath(string rootPath)
             {
                 return rootPath + "/certificate.pfx";
             }
