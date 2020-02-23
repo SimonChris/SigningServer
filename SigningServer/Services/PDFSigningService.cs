@@ -12,8 +12,6 @@ using iText.Kernel.Pdf;
 using iText.Signatures;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Cms;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Tsp;
@@ -68,10 +66,13 @@ namespace JuraDemo.Services
             Uri loginURL = new Uri(aURL + "/identity");
 
             //info for certificate with individual identities
-            JObject apiID = new JObject();
-            JObject subj = new JObject();
-            subj.Add("common_name", "Axolex ApS");
-            apiID.Add("subject_dn", subj);
+            JObject subj = new JObject {
+                { "common_name", "Axolex ApS" }
+            };
+
+            JObject apiID = new JObject {
+                { "subject_dn", subj }
+            };
 
             String token = (String)aObj.GetValue("access_token");
 
@@ -148,7 +149,6 @@ namespace JuraDemo.Services
         public static JObject Timestamp(String aURL, String digest, JObject aObj)
         {
             Uri loginURL = new Uri(aURL + "/timestamp/" + digest);
-
 
             String token = (String)aObj.GetValue("access_token");
 
