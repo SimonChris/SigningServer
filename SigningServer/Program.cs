@@ -20,6 +20,10 @@ namespace SigningServer
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureAppConfiguration((hostingContext, config) => {
+                    config.AddJsonFile(
+                        "apiconfig.json", optional: true, reloadOnChange: true);
                 });
     }
 }

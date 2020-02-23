@@ -20,7 +20,7 @@ using Org.BouncyCastle.X509;
 //using Sign;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
-namespace JuraDemo.Services
+namespace SigningServer.Services
 {
     public static class PDFSigningService
     {
@@ -67,7 +67,7 @@ namespace JuraDemo.Services
 
             //info for certificate with individual identities
             JObject subj = new JObject {
-                { "common_name", "Axolex ApS" }
+                { "common_name", GsConfig.CommonName }
             };
 
             JObject apiID = new JObject {
@@ -276,7 +276,6 @@ namespace JuraDemo.Services
 
             //Create Certificate chain
             X509Certificate[] chain = CreateChain(cert, ca);
-            //String temp = RESOURCE_FOLDER + Guid.NewGuid() + ".pdf";
 
             //create empty signature
             PdfReader reader = new PdfReader(source);
@@ -381,6 +380,7 @@ namespace JuraDemo.Services
 
         public static class GsConfig
         {
+            public static string CommonName { get; set; }
             public static string ApiSecret { get; set; }
             public static string ApiKey { get; set; }
             public static string KeyPassword { get; set; }

@@ -55,6 +55,8 @@ namespace SigningServer
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }

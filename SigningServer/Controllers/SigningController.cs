@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JuraDemo.Services;
+using SigningServer.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Extensions.Configuration;
 
 namespace SigningServer.Controllers
 {
@@ -18,22 +19,25 @@ namespace SigningServer.Controllers
     public class SigningController : ControllerBase
     {
         private readonly string _rootPath;
+        public readonly string _keyVaultEndpoint;
         private readonly IKeyVaultClient _keyVaultClient;
-        private static string _keyVaultEndpoint = "https://keyvaultwesterneurope.vault.azure.net/secrets";
+        public readonly IConfiguration _configuration;
 
         public SigningController(
             IWebHostEnvironment environment,
-            IKeyVaultClient keyVaultClient
+            IKeyVaultClient keyVaultClient,
+            IConfiguration configuration
         )
         {
             _rootPath = environment.WebRootPath;
             _keyVaultClient = keyVaultClient;
+            _keyVaultEndpoint = configuration["KeyVaultEndpoint"];
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("Post pdf byte array to this endpoint for signing");
+            return Ok("Post pdf byte array to this endpoint for signing.");
         }
 
         [HttpPost]
@@ -66,10 +70,12 @@ namespace SigningServer.Controllers
 
         private async Task InitializeSettings()
         {
+            var apiCommonName = await _keyVaultClient.GetSecretAsync($"{_keyVaultEndpoint}/apicommonname");
             var apiSecret = await _keyVaultClient.GetSecretAsync($"{_keyVaultEndpoint}/apisecret");
             var apiKey = await _keyVaultClient.GetSecretAsync($"{_keyVaultEndpoint}/apikey");
             var keyPassword = await _keyVaultClient.GetSecretAsync($"{_keyVaultEndpoint}/keyPassword");
 
+            PDFSigningService.GsConfig.CommonName = apiCommonName.Value;
             PDFSigningService.GsConfig.ApiSecret = apiSecret.Value;
             PDFSigningService.GsConfig.ApiKey = apiKey.Value;
             PDFSigningService.GsConfig.KeyPassword = keyPassword.Value;
